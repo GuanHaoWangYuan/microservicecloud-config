@@ -29,3 +29,95 @@ eureka:
   instance:
     instance-id: microservicecloud-dept1234
     prefer-ip-address: true
+---
+server:
+  port: 7001
+spring:
+  profiles: eureka-7001
+eureka:
+  instance:
+    hostname: eureka7001.com     # eureka服务端的实力名称
+  client:
+    register-with-eureka: false   # false表示自己不需要向注册中心注册自己
+    fetch-registry: false  # false表示自己就是注册中心。我的职责就是维护服务实例，并不需要去检索服务
+    service-url:
+#    defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/ #应用的主机名称
+     defaultZone: http://eureka7002.com:7002/eureka/,http://eureka7003.com:7003/eureka/
+---
+server:
+  port: 80
+spring:
+  profiles: eureka-80
+eureka:
+  client:
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/,http://eureka7003.com:7003/eureka/
+---
+server:
+  port: 80
+
+spring:
+  profiles: feign-80
+  
+feign: 
+  hystrix:
+    enabled: true
+
+eureka:
+  client:
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/,http://eureka7003.com:7003/eureka/
+---
+server:
+  port: 1234
+  
+mybatis:
+  type-aliases-package: com.GH.entity    # 所有Entity别名类所在包
+  mapper-locations:
+  - classpath:mybatis/mapper/**/*.xml                       # mapper映射文件
+    
+spring:
+   profiles: hystrix-1234
+   application:
+    name: microservicecloud-dept
+   datasource:
+    type: com.alibaba.druid.pool.DruidDataSource            # 当前数据源操作类型
+    driver-class-name: org.gjt.mm.mysql.Driver              # mysql驱动包
+    url: jdbc:mysql://localhost:3306/cloud_001              # 数据库名称
+    username: root
+    password: 1268574
+    dbcp2:
+      min-idle: 5                                           # 数据库连接池的最小维持连接数
+      initial-size: 5                                       # 初始化连接数
+      max-total: 5                                          # 最大连接数
+      max-wait-millis: 200                                  # 等待连接获取的最大超时时间
+      
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/,http://eureka7003.com:7003/eureka/
+  instance:
+    instance-id: microservicecloud-dept-hystrix
+    prefer-ip-address: true
+---
+server:
+  port: 2974
+spring:
+  profiles: zuul-2974
+  application:
+    name: microservicecloud-zuul-gateway
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/,http://eureka7003.com:7003/eureka/ 
+  instance:
+    instance-id: gateway-2974.com
+    prefer-ip-address: true
+zuul:
+  prefix: /Guan
+  ignored-services: "*"
+  routes:
+    mydept.serviceId: microservicecloud-dept
+    mydept.path: /mydept/**
