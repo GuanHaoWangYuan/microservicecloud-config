@@ -33,7 +33,7 @@ eureka:
 server:
   port: 7001
 spring:
-  profiles: eureka-7001
+  profiles: 7001
 eureka:
   instance:
     hostname: eureka7001.com     # eureka服务端的实力名称
@@ -47,7 +47,7 @@ eureka:
 server:
   port: 80
 spring:
-  profiles: eureka-80
+  profiles: eureka80
 eureka:
   client:
     register-with-eureka: false
@@ -58,7 +58,7 @@ server:
   port: 80
 
 spring:
-  profiles: feign-80
+  profiles: feign80
   
 feign: 
   hystrix:
@@ -79,7 +79,7 @@ mybatis:
   - classpath:mybatis/mapper/**/*.xml                       # mapper映射文件
     
 spring:
-   profiles: hystrix-1234
+   profiles: hystrix1234
    application:
     name: microservicecloud-dept
    datasource:
@@ -105,7 +105,7 @@ eureka:
 server:
   port: 2974
 spring:
-  profiles: zuul-2974
+  profiles: zuul2974
   application:
     name: microservicecloud-zuul-gateway
 eureka:
